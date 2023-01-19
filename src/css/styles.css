@@ -7,7 +7,7 @@ body {
         Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background-color: #fafafa;
+    background-color: bisque;
     color: #212121;
     line-height: 1.5;
 }
@@ -16,9 +16,8 @@ body {
     font: inherit;
     padding: 20px;
     margin-bottom: 16px;
-    display: flex;
-    justify-content: center;
 }
+
 
 input, button {
     padding: 10px;
@@ -26,9 +25,9 @@ input, button {
     font-family: inherit;
 }
 
-img {
-    display: block;
+
+
+.gallery {
+    display: flex;
     width: 100%;
-    height: 100%;
-    object-fit: cover;
 }
