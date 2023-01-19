@@ -30,7 +30,7 @@ function createListsImages(data, gallery) {
       }
     )
     .join('');
-  gallery.insertAdjacentHTML('beforeend', newGallery);
+    gallery.insertAdjacentHTML('beforeend', newGallery);
 }
 
 export { createListsImages };
