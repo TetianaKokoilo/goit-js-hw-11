@@ -1,3 +1,4 @@
+
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import { getImages } from './js/search-image';
 import { createListsImages } from './js/create-image';
