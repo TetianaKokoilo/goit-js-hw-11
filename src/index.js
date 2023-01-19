@@ -20,7 +20,7 @@ const options = {
     rootMargin: '300px',
     threshold: 1.0,
 };
-const observer = new IntersectionObserver(handleIntersection, options);
+const intersectionObserver = new IntersectionObserver(handleIntersection, options);
 hideCheckBox();
 
 searchForm.addEventListener('submit', onFormSubmit);
