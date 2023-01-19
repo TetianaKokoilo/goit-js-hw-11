@@ -3,9 +3,9 @@ import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import { getImages } from './js/search-image';
 import { createListsImages } from './js/create-image';
 
-const searchForm = document.querySelector('#search-form');
+const form = document.querySelector('#search-form');
 const gallery = document.querySelector('.js-gallery');
-const loadMoreBtn = document.querySelector('.js-load-more');
+const loadMore = document.querySelector('.js-load-more');
 const observerGuard = document.querySelector(".js-guard");
 const infinityCheckBox = document.querySelector('.js-allow-infinity');
 const checkBoxLabel = document.querySelector('.js-allow-infinity-label');
@@ -23,8 +23,8 @@ const options = {
 const intersectionObserver = new IntersectionObserver(handleIntersection, options);
 hideCheckBox();
 
-searchForm.addEventListener('submit', onFormSubmit);
-loadMoreBtn.addEventListener('click', onLoadMore);
+form.addEventListener('submit', onFormSubmit);
+loadMore.addEventListener('click', onLoadMore);
 infinityCheckBox.addEventListener('change', setInfinityLoad);
 
 function onFormSubmit(evt) {
@@ -44,7 +44,7 @@ function onFormSubmit(evt) {
 };
 
 function onLoadMore() { 
-    loadMoreBtn.classList.replace('show', 'hide');
+    loadMore.classList.replace('show', 'hide');
     renderItems(previousSearchValue, page);
     incrementPage();
 };
@@ -76,7 +76,7 @@ async function renderItems(searchRequest, searchPage) {
            Notify.success(`Hooray! We found ${foundImagesQty} images.`);
         };
         createListsImages(arrayOfImages, gallery);
-        loadMoreBtn.classList.replace('hide', 'show');
+        loadMore.classList.replace('hide', 'show');
         showCheckBox();
     } catch (error) {
         console.error(error.stack);  
