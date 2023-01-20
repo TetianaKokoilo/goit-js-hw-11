@@ -16,18 +16,75 @@ body {
     font: inherit;
     padding: 20px;
     margin-bottom: 16px;
+    display: flex;
+    justify-content: center;
+    /* border-radius: 5px; */
 }
 
 
 input, button {
     padding: 10px;
-    margin-right: 10px;
+    /* margin-right: 10px; */
     font-family: inherit;
 }
-
-
+ul {
+    margin-top: 0;
+    margin-bottom: 0;
+    padding-left: 0;
+    list-style: none;
+}
+img {
+    display: block;
+    /* max-width: 100%; */
+    /* height: auto; */
+}
 
 .gallery {
+    margin-top: 30px;
+        width: 1200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 20px 20px;
+        margin-left: auto;
+        margin-right: auto;
+
+}
+.photo-card {
+    display: block;
+    padding: 10px;
+    /* width: 250px; */
+}
+
+.photo-img {
+    border-radius: 5px;
+    width: 175px;
+    height: 175px;
+    object-fit: cover;
+}
+.info-item {
+    margin: 0;
+    font-family: inherit;
+   
+
+}
+.search-form__input,
+.search-form__btn,
+.load-more {
+    border: none;
+    border-radius: 5px;
+}
+.search-form__btn {
+    margin-left: 10px;
+}
+.search-form__btn:hover,
+.load-more:hover {
+    background-color: rgba(127, 255, 246, 0.142);
+}
+.load-controls {
     display: flex;
-    width: 100%;
+    justify-content: center;
+
 }
