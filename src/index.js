@@ -1,112 +1,95 @@
 
-import { Notify } from 'notiflix/build/notiflix-notify-aio';
-import { getImages } from './js/search-image';
-import { createListsImages } from './js/create-image';
+import { Notify } from 'notiflix';
+import { newView } from './js/search-image';
 
 const form = document.querySelector('#search-form');
-const gallery = document.querySelector('.js-gallery');
-const loadMore = document.querySelector('.js-load-more');
-const observerGuard = document.querySelector(".js-guard");
-const infinityCheckBox = document.querySelector('.js-allow-infinity');
-const checkBoxLabel = document.querySelector('.js-allow-infinity-label');
+const input = form.elements.searchQuery;
+const gallery = document.querySelector('.gallery');
+const loadMore = document.querySelector('.load-more');
 
-let page = 1;
-let pages = 1;
-let previousSearchValue = '';
-let isInfinityLoad = null;
+loadMore.classList.add('visually-hidden');
 
-const options = {
-    root: null,
-    rootMargin: '300px',
-    threshold: 1.0,
-};
-const intersectionObserver = new IntersectionObserver(handleIntersection, options);
-hideCheckBox();
+let page = 0;
+let limit = 0;
+const perPage = 40;
+let totalHits = 0;
 
-form.addEventListener('submit', onFormSubmit);
+form.addEventListener('submit', onSearch);
 loadMore.addEventListener('click', onLoadMore);
-infinityCheckBox.addEventListener('change', setInfinityLoad);
+function onLoadMore(event) {
+  event.preventDefault();
+  page += 1;
+  createGallery(page);
+}
 
-function onFormSubmit(evt) {
-    evt.preventDefault();
-    const currentSearchValue = evt.target.elements.searchQuery.value.trim();
-    const isPreviusValue = previousSearchValue !== '' && previousSearchValue !== currentSearchValue;
-    
-    if (isPreviusValue) {
-        resetSearch();
-    };
-    if (!currentSearchValue) {
-        return Notify.failure('Enter your request, please.');
-    };
-    previousSearchValue = currentSearchValue;
-    renderItems(currentSearchValue, page);
-    incrementPage();
-};
+function onSearch(event) {
+  page = 1;
+  limit = 1;
+  event.preventDefault();
+  gallery.innerHTML = '';
+  loadMore.classList.add('visually-hidden');
 
-function onLoadMore() { 
-    loadMore.classList.replace('show', 'hide');
-    renderItems(previousSearchValue, page);
-    incrementPage();
-};
+  createGallery(page);
+}
 
-function handleIntersection(entries, observer) {
-     entries.forEach(entry => {
-    if (entry.isIntersecting && previousSearchValue)  onLoadMore();
-    if (pages < page) {
-        observer.unobserve(observerGuard);
+async function createGallery(page) {
+  try {
+    const data = await newView(input.value, page, perPage);
+
+    totalHits = data.totalHits;
+    console.log(totalHits);
+    limit = totalHits / perPage;
+    if (totalHits) {
+      if (page === 1) {
+        Notify.info(`Hooray! We found ${totalHits} images.`);
+      }
+      console.log(page);
+      console.log(limit);
+      if (page > limit) {
+        Notify.info(
+          "We're sorry, but you've reached the end of search results."
+        );
+        return loadMore.classList.add('visually-hidden');
+      }
+
+      renderMurkup(data.hits);
+      loadMore.classList.remove('visually-hidden');
+    } else {
+      loadMore.classList.add('visually-hidden');
+      Notify.failure(
+        'Sorry, there are no images matching your search query. Please try again.'
+      );
     }
-  });
-};
+  } catch (error) {
+    console.log(error);
+    Notify.failure(
+      'Sorry, there are no images matching your search query. Please try again.'
+    );
+  }
+}
 
-async function renderItems(searchRequest, searchPage) {
-    try {
-        const response = await getImages(searchRequest, searchPage);
-        const arrayOfImages = response.data.hits;
-        const foundImagesQty = response.data.totalHits;
-        const totalFoundImages = response.data.total;
-        pages = Math.round(totalFoundImages / foundImagesQty);
-
-        if (!totalFoundImages) {
-            return Notify.info('Sorry, there are no images matching your search query. Please try again.');
-        };
-        if (!arrayOfImages.length) {
-           return Notify.failure("We're sorry, but you've reached the end of search results.");
-        };
-        if (page - 1 === 1) {
-           Notify.success(`Hooray! We found ${foundImagesQty} images.`);
-        };
-        createListsImages(arrayOfImages, gallery);
-        loadMore.classList.replace('hide', 'show');
-        showCheckBox();
-    } catch (error) {
-        console.error(error.stack);  
-    };
-};
-
-function incrementPage() {
-    return page += 1;
-};
-
-function resetSearch() {
-    page = 1;
-    gallery.innerHTML = '';
-    infinityCheckBox.checked = false;
-    intersectionObserver.unobserve(observerGuard);
-};
-
-function hideCheckBox() {
-    infinityCheckBox.hidden = true;
-    checkBoxLabel.hidden = true;
-};
-
-function showCheckBox() {
-    infinityCheckBox.hidden = false;
-    checkBoxLabel.hidden = false;
-};
-
-function setInfinityLoad(event) {
-  isInfinityLoad = event.currentTarget.checked;
-  isInfinityLoad
-    ? intersectionObserver.observe(observerGuard)
-        : intersectionObserver.unobserve(observerGuard);
-};
+function renderMurkup(arr) {
+    let murkup = arr
+        .map(
+            ({
+                webformatURL,
+                largeImageURL,
+                tags,
+                likes,
+                views,
+                comments,
+                downloads,
+            }) => {
+                return `<div class="photo-card"><a href="${webformatURL}"> 
+        <img class="photo-img" src="${webformatURL}" alt="${tags}" loading="lazy" /></a>
+        <div class="info">
+        <p class="info-item"><b>Likes  ${likes}</b></p>
+        <p class="info-item"><b>Views ${views}</b></p>
+        <p class="info-item"><b>Comments ${downloads}</b></p>
+        <p class="info-item"><b>Downloads ${comments}</b></p></div>
+        </div>`;
+            }
+        )
+        .join('');
+    gallery.insertAdjacentHTML('beforeend', murkup);
+}

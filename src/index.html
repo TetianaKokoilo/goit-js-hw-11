@@ -1,29 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Homework 11</title>
-    <link rel="stylesheet" href="./css/styles.css" /></head>
-<body>
-        <form class="search-form" id="search-form">
-            <input class="search-form__input" type="text" name="searchQuery" autocomplete="off"
-                placeholder="Search images..." />
-            <button class="search-form__btn" type="submit">Search</button>
-        </form>
+    <link rel="stylesheet" href="./css/styles.css" />
+  </head>
+  <body>
+    <form class="search-form" id="search-form">
+      <input
+        class="search-input"
+        type="text"
+        name="searchQuery"
+        autocomplete="off"
+        placeholder="Search images..."
+      />
+      <button class="search-btn" type="submit">Search
+      </button>
+    </form>
+    <div class="gallery"></div>
+    <button type="button" class="load-more">Load more</button>
 
-    <div class="js-gallery gallery"></div>
-    <div class="js-guard"></div>
-    <div class="load-controls">
-        <label class="js-allow-infinity-label">
-            <input class="js-allow-infinity" type="checkbox">
-            <b>Choise scroll or</b>
-            <button type="button" class="js-load-more load-more hide">Load more</button>
-        </label>
-    </div>
-
-    <script type="module" src="./index.js"></script>
-</body>
-
+    <script src="index.js" type="module"></script>
+  </body>
 </html>
